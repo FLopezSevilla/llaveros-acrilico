@@ -26,9 +26,8 @@ TEXTOS = {
         "global_params": "Parámetros Globales (Predeterminados)",
         "diametro": "Tamaño Total del Llavero (mm)",
         "margen": "Margen de Acrílico Transparente (mm)",
-        "radio_oreja": "Desplazamiento Ojal en X (mm)",
-        "profundidad_oreja": "Profundidad de Ojal / Embebido (mm)",
-        "radio_hueco": "Tamaño de Ojal / Oreja - Radio (mm)",
+        "pos_ojal": "Posición Ojal",
+        "radio_oreja": "Tamaño de Ojal / Oreja - Radio (mm)",
         "radio_interno": "Tamaño del Agujero para Argolla - Radio (mm)",
         "color_base": "Color de Fondo (Base Blanca)",
         "btn_reset_global": "Restablecer Valores de Fábrica",
@@ -45,8 +44,8 @@ TEXTOS = {
         "descargas": "Descargas",
         "descargar_uno": "Descargar SVG",
         "descargar_zip": "Descargar ZIP",
-        "label_offset_x": "Desplazamiento Ojal en X (mm)",
-        "label_profundidad": "Profundidad de Ojal / Embebido (mm)",
+        "label_offset_x": "Posición Ojal X (mm)",
+        "label_offset_y": "Posición Ojal Y (mm)",
         "label_ind_margen": "Margen de Acrílico (mm)",
         "label_ind_oreja": "Tamaño de Ojal - Radio (mm)",
         "label_ind_hueco": "Tamaño de Agujero - Radio (mm)",
@@ -58,9 +57,8 @@ TEXTOS = {
         "global_params": "Global Parameters (Default)",
         "diametro": "Total Keychain Size (mm)",
         "margen": "Transparent Acrylic Margin (mm)",
-        "radio_oreja": "Hanger X Offset (mm)",
-        "profundidad_oreja": "Hanger Embed Depth (mm)",
-        "radio_hueco": "Hanger / Ear Size - Radius (mm)",
+        "pos_ojal": "Hanger Position",
+        "radio_oreja": "Hanger / Ear Size - Radius (mm)",
         "radio_interno": "Ring Hole Size - Radius (mm)",
         "color_base": "Background Color (White Base)",
         "btn_reset_global": "Reset Factory Defaults",
@@ -77,8 +75,8 @@ TEXTOS = {
         "descargas": "Downloads",
         "descargar_uno": "Download SVG",
         "descargar_zip": "Download ZIP",
-        "label_offset_x": "Hanger X Offset (mm)",
-        "label_profundidad": "Hanger Embed Depth (mm)",
+        "label_offset_x": "Hanger X Position (mm)",
+        "label_offset_y": "Hanger Y Position (mm)",
         "label_ind_margen": "Acrylic Margin (mm)",
         "label_ind_oreja": "Hanger Size - Radius (mm)",
         "label_ind_hueco": "Ring Hole Size - Radius (mm)",
@@ -103,9 +101,9 @@ st.sidebar.header(t["global_params"])
 
 if "g_diametro" not in st.session_state: st.session_state.g_diametro = 60.0
 if "g_margen" not in st.session_state: st.session_state.g_margen = 3.0
-if "g_radio_oreja" not in st.session_state: st.session_state.g_radio_oreja = 0.0
-if "g_profundidad_oreja" not in st.session_state: st.session_state.g_profundidad_oreja = 2.0
-if "g_radio_hueco" not in st.session_state: st.session_state.g_radio_hueco = 7.0
+if "g_oreja_x" not in st.session_state: st.session_state.g_oreja_x = 0.0
+if "g_oreja_y" not in st.session_state: st.session_state.g_oreja_y = 2.0
+if "g_radio_oreja" not in st.session_state: st.session_state.g_radio_oreja = 7.0
 if "g_radio_interno" not in st.session_state: st.session_state.g_radio_interno = 2.5
 if "g_color_base" not in st.session_state: st.session_state.g_color_base = "#FFFFFF"
 
@@ -115,27 +113,20 @@ if "g_orden_capas" not in st.session_state:
 if "confirm_reset_global" not in st.session_state:
     st.session_state.confirm_reset_global = False
 
-old_global_diametro = st.session_state.g_diametro
-old_global_margen = st.session_state.g_margen
-old_global_oreja = st.session_state.g_radio_oreja
-old_global_profundidad = st.session_state.g_profundidad_oreja
-old_global_hueco = st.session_state.g_radio_hueco
-old_global_interno = st.session_state.g_radio_interno
-old_global_color = st.session_state.g_color_base
-
 st.session_state.g_diametro = st.sidebar.number_input(t["diametro"], 40.0, 100.0, float(st.session_state.g_diametro),
                                                       1.0, key="input_g_diametro")
 st.session_state.g_margen = st.sidebar.number_input(t["margen"], 1.0, 10.0, float(st.session_state.g_margen), 0.5,
                                                     key="input_g_margen")
-st.session_state.g_radio_oreja = st.sidebar.number_input(t["radio_oreja"], -15.0, 15.0,
+
+st.sidebar.markdown(f"**{t['pos_ojal']}**")
+st.session_state.g_oreja_x = st.sidebar.number_input(t["label_offset_x"], -15.0, 15.0,
+                                                     float(st.session_state.g_oreja_x), 0.5, key="input_g_oreja_x")
+st.session_state.g_oreja_y = st.sidebar.number_input(t["label_offset_y"], -10.0, 15.0,
+                                                     float(st.session_state.g_oreja_y), 0.5, key="input_g_oreja_y")
+
+st.session_state.g_radio_oreja = st.sidebar.number_input(t["radio_oreja"], 4.0, 10.0,
                                                          float(st.session_state.g_radio_oreja), 0.5,
                                                          key="input_g_oreja")
-st.session_state.g_profundidad_oreja = st.sidebar.number_input(t["profundidad_oreja"], 0.0, 10.0,
-                                                               float(st.session_state.g_profundidad_oreja), 0.5,
-                                                               key="input_g_profundidad")
-st.session_state.g_radio_hueco = st.sidebar.number_input(t["radio_hueco"], 4.0, 10.0,
-                                                         float(st.session_state.g_radio_hueco), 0.5,
-                                                         key="input_g_hueco")
 st.session_state.g_radio_interno = st.sidebar.number_input(t["radio_interno"], 1.0, 5.0,
                                                            float(st.session_state.g_radio_interno), 0.5,
                                                            key="input_g_interno")
@@ -151,9 +142,9 @@ if st.session_state.confirm_reset_global:
     if col_c1.button(t["yes"]):
         st.session_state.g_diametro = 60.0
         st.session_state.g_margen = 3.0
-        st.session_state.g_radio_oreja = 0.0
-        st.session_state.g_profundidad_oreja = 2.0
-        st.session_state.g_radio_hueco = 7.0
+        st.session_state.g_oreja_x = 0.0
+        st.session_state.g_oreja_y = 2.0
+        st.session_state.g_radio_oreja = 7.0
         st.session_state.g_radio_interno = 2.5
         st.session_state.g_color_base = "#FFFFFF"
         st.session_state.confirm_reset_global = False
@@ -174,9 +165,9 @@ if archivos_subidos:
         if archivo.name not in st.session_state.configs:
             st.session_state.configs[archivo.name] = {
                 "custom_enabled": False,
-                "offset_x": st.session_state.g_radio_oreja,
-                "profundidad": st.session_state.g_profundidad_oreja,
-                "radio_oreja": st.session_state.g_radio_hueco,
+                "oreja_x": st.session_state.g_oreja_x,
+                "oreja_y": st.session_state.g_oreja_y,
+                "radio_oreja": st.session_state.g_radio_oreja,
                 "radio_hueco": st.session_state.g_radio_interno,
                 "margen": st.session_state.g_margen,
                 "color_base": st.session_state.g_color_base
@@ -184,9 +175,9 @@ if archivos_subidos:
         else:
             conf = st.session_state.configs[archivo.name]
             if not conf["custom_enabled"]:
-                conf["offset_x"] = st.session_state.g_radio_oreja
-                conf["profundidad"] = st.session_state.g_profundidad_oreja
-                conf["radio_oreja"] = st.session_state.g_radio_hueco
+                conf["oreja_x"] = st.session_state.g_oreja_x
+                conf["oreja_y"] = st.session_state.g_oreja_y
+                conf["radio_oreja"] = st.session_state.g_radio_oreja
                 conf["radio_hueco"] = st.session_state.g_radio_interno
                 conf["margen"] = st.session_state.g_margen
                 conf["color_base"] = st.session_state.g_color_base
@@ -208,33 +199,26 @@ if archivos_subidos:
     conf_actual["custom_enabled"] = usar_ind
 
     if usar_ind:
-        novo_offset = st.sidebar.number_input(t["label_offset_x"], -15.0, 15.0, float(conf_actual["offset_x"]), 0.5,
-                                              key=f"ind_offset_{archivo_seleccionado}")
-        conf_actual["offset_x"] = novo_offset
-
-        novo_prof = st.sidebar.number_input(t["label_profundidad"], 0.0, 10.0, float(conf_actual["profundidad"]), 0.5,
-                                            key=f"ind_prof_{archivo_seleccionado}")
-        conf_actual["profundidad"] = novo_prof
-
-        novo_margen = st.sidebar.number_input(t["label_ind_margen"], 1.0, 10.0, float(conf_actual["margen"]), 0.5,
-                                              key=f"ind_margen_{archivo_seleccionado}")
-        conf_actual["margen"] = novo_margen
-
-        novo_oreja = st.sidebar.number_input(t["label_ind_oreja"], 4.0, 10.0, float(conf_actual["radio_oreja"]), 0.5,
-                                             key=f"ind_oreja_{archivo_seleccionado}")
-        conf_actual["radio_oreja"] = novo_oreja
-
-        novo_hueco = st.sidebar.number_input(t["label_ind_hueco"], 1.0, 5.0, float(conf_actual["radio_hueco"]), 0.5,
-                                             key=f"ind_hueco_{archivo_seleccionado}")
-        conf_actual["radio_hueco"] = novo_hueco
-
-        novo_color = st.sidebar.color_picker(t["label_ind_color"], conf_actual["color_base"],
-                                             key=f"ind_color_{archivo_seleccionado}")
-        conf_actual["color_base"] = novo_color
+        conf_actual["oreja_x"] = st.sidebar.number_input(t["label_offset_x"], -15.0, 15.0,
+                                                         float(conf_actual["oreja_x"]), 0.5,
+                                                         key=f"ind_ox_{archivo_seleccionado}")
+        conf_actual["oreja_y"] = st.sidebar.number_input(t["label_offset_y"], -10.0, 15.0,
+                                                         float(conf_actual["oreja_y"]), 0.5,
+                                                         key=f"ind_oy_{archivo_seleccionado}")
+        conf_actual["margen"] = st.sidebar.number_input(t["label_ind_margen"], 1.0, 10.0, float(conf_actual["margen"]),
+                                                        0.5, key=f"ind_margen_{archivo_seleccionado}")
+        conf_actual["radio_oreja"] = st.sidebar.number_input(t["label_ind_oreja"], 4.0, 10.0,
+                                                             float(conf_actual["radio_oreja"]), 0.5,
+                                                             key=f"ind_oreja_{archivo_seleccionado}")
+        conf_actual["radio_hueco"] = st.sidebar.number_input(t["label_ind_hueco"], 1.0, 5.0,
+                                                             float(conf_actual["radio_hueco"]), 0.5,
+                                                             key=f"ind_hueco_{archivo_seleccionado}")
+        conf_actual["color_base"] = st.sidebar.color_picker(t["label_ind_color"], conf_actual["color_base"],
+                                                            key=f"ind_color_{archivo_seleccionado}")
     else:
-        conf_actual["offset_x"] = st.session_state.g_radio_oreja
-        conf_actual["profundidad"] = st.session_state.g_profundidad_oreja
-        conf_actual["radio_oreja"] = st.session_state.g_radio_hueco
+        conf_actual["oreja_x"] = st.session_state.g_oreja_x
+        conf_actual["oreja_y"] = st.session_state.g_oreja_y
+        conf_actual["radio_oreja"] = st.session_state.g_radio_oreja
         conf_actual["radio_hueco"] = st.session_state.g_radio_interno
         conf_actual["margen"] = st.session_state.g_margen
         conf_actual["color_base"] = st.session_state.g_color_base
@@ -317,6 +301,7 @@ if archivos_subidos:
                         poligonos_corte.append(p)
 
         forma_principal = max(poligonos_corte, key=lambda poly: poly.area) if poligonos_corte else Polygon()
+
         forma_expandida = forma_principal.buffer(pixels_offset, join_style=1).buffer(-0.5, join_style=1).buffer(0.5,
                                                                                                                 join_style=1)
 
@@ -324,10 +309,11 @@ if archivos_subidos:
         centro_x_base = (minx + maxx) / 2.0
         top_y = miny
 
-        offset_x_px = (c_conf["offset_x"] / 25.4) * dpi
-        profundidad_px = (c_conf["profundidad"] / 25.4) * dpi
+        offset_x_px = (c_conf["oreja_x"] / 25.4) * dpi
+        offset_y_px = (c_conf["oreja_y"] / 25.4) * dpi
+
         centro_oreja_x = centro_x_base + offset_x_px
-        centro_oreja_y = top_y + profundidad_px
+        centro_oreja_y = top_y + offset_y_px
 
         radio_oreja_px = (c_conf["radio_oreja"] / 25.4) * dpi
         radio_hueco_px = (c_conf["radio_hueco"] / 25.4) * dpi
@@ -338,7 +324,7 @@ if archivos_subidos:
         forma_final_corte = unary_union([forma_expandida, oreja]).difference(hueco)
 
         minx_c, miny_c, maxx_c, maxy_c = forma_final_corte.bounds
-        shift_y = 20.0 - miny_c
+        shift_y = 20.0 - miny_c if miny_c < 20.0 else 0.0
 
         if shift_y > 0:
             h_nuevo = int(h + shift_y)
@@ -381,23 +367,6 @@ if archivos_subidos:
 
                         if len(set(candidatas)) != 4:
                             st.error(t["error_capas"])
-
-                            target_selectors = []
-                            if sel_1 in duplicados: target_selectors.append(1)
-                            if sel_2 in duplicados: target_selectors.append(2)
-                            if sel_3 in duplicados: target_selectors.append(3)
-                            if sel_4 in duplicados: target_selectors.append(4)
-
-                            css_rules = ""
-                            for idx in target_selectors:
-                                css_rules += f"div[data-baseweb='select']:nth-of-type({idx}) > div {{ border-color: #ff4b4b !important; }}\n"
-
-                            st.markdown(f"""
-                                <style>
-                                {css_rules}
-                                </style>
-                            """, unsafe_allow_html=True)
-
                             st.session_state.g_orden_capas = ["1 imagen", "2 base blanca", "3 imagen", "4 corte"]
                         else:
                             st.session_state.g_orden_capas = candidatas
@@ -410,8 +379,17 @@ if archivos_subidos:
                     key=f"radio_capas_{archivo.name}"
                 )
 
-        img_preview = np.zeros((h, w, 4), dtype=np.uint8)
+        # --- PREVISUALIZACION CON PADDING AMPLIADO PARA QUE NO SE CORTEN LOS BORDES ---
+        padding_canvas = 60
+        h_pad = h + (padding_canvas * 2)
+        w_pad = w + (padding_canvas * 2)
+
+        img_preview = np.zeros((h_pad, w_pad, 4), dtype=np.uint8)
         img_rgb = cv2.cvtColor(img_resized, cv2.COLOR_BGRA2RGBA)
+        img_preview[padding_canvas:padding_canvas + h, padding_canvas:padding_canvas + w] = img_rgb
+
+        forma_corte_desplazada = translate(forma_final_corte, xoff=padding_canvas, yoff=padding_canvas)
+        forma_base_desplazada = translate(forma_base_blanca, xoff=padding_canvas, yoff=padding_canvas)
 
         capa_activa = st.session_state.get(f"radio_capas_{archivo.name}", t["capas_opciones"][0])
 
@@ -419,23 +397,25 @@ if archivos_subidos:
         rgb_base = tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
         if capa_activa == t["capas_opciones"][0]:
-            img_preview = img_rgb.copy()
-            if forma_final_corte.geom_type == 'Polygon':
-                cv2.polylines(img_preview, [np.array(forma_final_corte.exterior.coords, dtype=np.int32)], isClosed=True,
-                              color=(255, 0, 255, 255), thickness=2)
-                for inter in forma_final_corte.interiors:
+            img_preview = np.zeros((h_pad, w_pad, 4), dtype=np.uint8)
+            img_preview[padding_canvas:padding_canvas + h, padding_canvas:padding_canvas + w] = img_rgb
+            if forma_corte_desplazada.geom_type == 'Polygon':
+                cv2.polylines(img_preview, [np.array(forma_corte_desplazada.exterior.coords, dtype=np.int32)],
+                              isClosed=True, color=(255, 0, 255, 255), thickness=2)
+                for inter in forma_corte_desplazada.interiors:
                     cv2.polylines(img_preview, [np.array(inter.coords, dtype=np.int32)], isClosed=True,
                                   color=(255, 0, 255, 255), thickness=2)
-            elif forma_final_corte.geom_type == 'MultiPolygon':
-                for geom in forma_final_corte.geoms:
+            elif forma_corte_desplazada.geom_type == 'MultiPolygon':
+                for geom in forma_corte_desplazada.geoms:
                     cv2.polylines(img_preview, [np.array(geom.exterior.coords, dtype=np.int32)], isClosed=True,
                                   color=(255, 0, 255, 255), thickness=2)
 
         elif capa_activa == t["capas_opciones"][1]:
-            img_preview = img_rgb
+            img_preview = np.zeros((h_pad, w_pad, 4), dtype=np.uint8)
+            img_preview[padding_canvas:padding_canvas + h, padding_canvas:padding_canvas + w] = img_rgb
 
         elif capa_activa == t["capas_opciones"][2]:
-            mask_base = np.zeros((h, w), dtype=np.uint8)
+            mask_base = np.zeros((h_pad, w_pad), dtype=np.uint8)
 
 
             def pintar_geom(geom):
@@ -448,34 +428,34 @@ if archivos_subidos:
                     for g in geom.geoms: pintar_geom(g)
 
 
-            pintar_geom(forma_base_blanca)
+            pintar_geom(forma_base_desplazada)
             img_preview = cv2.cvtColor(mask_base, cv2.COLOR_GRAY2RGBA)
             img_preview[mask_base == 255] = [rgb_base[0], rgb_base[1], rgb_base[2], 255]
 
         elif capa_activa == t["capas_opciones"][3]:
-            img_preview = img_rgb
+            img_preview = np.zeros((h_pad, w_pad, 4), dtype=np.uint8)
+            img_preview[padding_canvas:padding_canvas + h, padding_canvas:padding_canvas + w] = img_rgb
 
         elif capa_activa == t["capas_opciones"][4]:
-            if forma_final_corte.geom_type == 'Polygon':
-                cv2.polylines(img_preview, [np.array(forma_final_corte.exterior.coords, dtype=np.int32)], isClosed=True,
-                              color=(255, 0, 255, 255), thickness=3)
-                for inter in forma_final_corte.interiors:
+            if forma_corte_desplazada.geom_type == 'Polygon':
+                cv2.polylines(img_preview, [np.array(forma_corte_desplazada.exterior.coords, dtype=np.int32)],
+                              isClosed=True, color=(255, 0, 255, 255), thickness=3)
+                for inter in forma_corte_desplazada.interiors:
                     cv2.polylines(img_preview, [np.array(inter.coords, dtype=np.int32)], isClosed=True,
                                   color=(255, 0, 255, 255), thickness=3)
-            elif forma_final_corte.geom_type == 'MultiPolygon':
-                for geom in forma_final_corte.geoms:
+            elif forma_corte_desplazada.geom_type == 'MultiPolygon':
+                for geom in forma_corte_desplazada.geoms:
                     cv2.polylines(img_preview, [np.array(geom.exterior.coords, dtype=np.int32)], isClosed=True,
                                   color=(255, 0, 255, 255), thickness=3)
 
         if archivo.name == archivo_seleccionado:
             with col_preview:
-                st.image(img_preview, use_column_width=True)
+                st.image(img_preview, use_container_width=True)
 
         success, encoded_img = cv2.imencode('.png', img_resized)
         data_uri = f"data:image/png;base64,{base64.b64encode(encoded_img).decode('utf-8')}"
 
         dwg = svgwrite.Drawing(profile='tiny', size=(w, h), debug=False)
-
         elementos_capas = {}
 
         g1 = dwg.g(id='1_imagen')
