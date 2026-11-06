@@ -450,7 +450,7 @@ if archivos_subidos:
 
         if archivo.name == archivo_seleccionado:
             with col_preview:
-                st.image(img_preview, width="stretch")
+                st.image(img_preview)
 
         success, encoded_img = cv2.imencode('.png', img_resized)
         data_uri = f"data:image/png;base64,{base64.b64encode(encoded_img).decode('utf-8')}"
